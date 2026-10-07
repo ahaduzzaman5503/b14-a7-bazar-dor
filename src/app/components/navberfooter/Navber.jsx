@@ -3,10 +3,10 @@ import React from "react";
 import logo from "../../../assets/logo-icon.png";
 import Categorylinks from "./Categorylinks";
 import Link from "next/link";
+import BanglaDate from "../date/BanglaDate";
+import PriceTicker from "./PriceTicker";
 
 const Navber = () => {
-    const date = new Date().toLocaleDateString("bn-BD", {dateStyle: "full"});
-
   return (
     <div className="container mx-auto">
       <div className="navbar bg-base-100 shadow-sm">
@@ -21,8 +21,8 @@ const Navber = () => {
             ></Image>
 
             <div className="flex flex-col items-start">
-                <h2 className="text-lg font-bold">বাজার দর</h2>
-                {date}
+              <h2 className="text-lg font-bold">বাজার দর</h2>
+              <BanglaDate />
             </div>
           </Link>
         </div>
@@ -33,6 +33,7 @@ const Navber = () => {
         </div>
       </div>
       <Categorylinks />
+      <PriceTicker />
     </div>
   );
 };
