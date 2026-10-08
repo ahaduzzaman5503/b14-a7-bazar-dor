@@ -3,7 +3,7 @@
 import Marquee from "react-fast-marquee";
 import { useEffect, useState } from "react";
 
-const API_URL = "https://api.api-store.workers.dev/api/bazardor/products";
+const API_URL = "https://api.abcz.workers.dev/api/bazardor/products";
 
 const PriceTicker = () => {
   const [products, setProducts] = useState([]);
@@ -35,7 +35,7 @@ const PriceTicker = () => {
     <div className="w-full overflow-hidden border-y border-gray-200 bg-white">
       <Marquee
         direction="left"
-        speed={40}
+        speed={70}
         autoFill={true}
         pauseOnHover={true}
         gradient={false}

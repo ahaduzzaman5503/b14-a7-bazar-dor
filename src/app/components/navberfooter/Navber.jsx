@@ -5,6 +5,7 @@ import Categorylinks from "./Categorylinks";
 import Link from "next/link";
 import BanglaDate from "../date/BanglaDate";
 import PriceTicker from "./PriceTicker";
+import Userinfo from "../userInfo/Userinfo";
 
 const Navber = () => {
   return (
@@ -27,9 +28,8 @@ const Navber = () => {
           </Link>
         </div>
 
-        <div className="flex gap-2">
-          <button className="btn btn-soft">সাইন ইন</button>
-          <button className="btn btn-success">সাইন আপ</button>
+        <div className="flex items-center gap-2">
+          <Userinfo />
         </div>
       </div>
       <Categorylinks />
