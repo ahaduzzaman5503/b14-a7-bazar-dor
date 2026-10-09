@@ -1,9 +1,12 @@
 import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
+import { headers } from "next/headers";
+import { auth } from "../../../lib/auth";
 
 const formatPrice = (price) =>
   new Intl.NumberFormat("bn-BD", {
     maximumFractionDigits: 2,
-  }).format(price);
+  }).format(Number(price) || 0);
 
 const getUnit = (unit) => {
   const units = {
@@ -18,16 +21,60 @@ const getUnit = (unit) => {
 
 const ProductDetails = async ({ params }) => {
   const { id } = await params;
-  const res = await fetch(`https://api.abcz.workers.dev/api/bazardor/products/${id}`)
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    const callbackURL = `/product/${id}`;
+    redirect(`/signin?callbackURL=${encodeURIComponent(callbackURL)}`);
+  }
+
+  const res = await fetch(
+    `https://api.abcz.workers.dev/api/bazardor/products/${encodeURIComponent(id)}`,
+    { cache: "no-store" },
+  );
+
+  if (res.status === 404) {
+    notFound();
+  }
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch product details");
+  }
+
   const product = await res.json();
+  console.log(product);
 
-  const markets = product.markets;
-  const minPrice = Math.min(...markets.map((market) => market.min));
-  const maxPrice = Math.max(...markets.map((market) => market.max));
+  if (!product || typeof product !== "object") {
+    throw new Error("Invalid product data");
+  }
 
-  const avgPrice =
-    markets.reduce((sum, market) => sum + (market.min + market.max) / 2, 0) /
-    markets.length;
+  const markets = Array.isArray(product.markets)
+    ? product.markets
+        .map((market) => ({
+          ...market,
+          min: Number(market.min),
+          max: Number(market.max),
+        }))
+        .filter(
+          (market) =>
+            Number.isFinite(market.min) && Number.isFinite(market.max),
+        )
+    : [];
+
+  const minPrice = markets.length
+    ? Math.min(...markets.map((market) => market.min))
+    : 0;
+
+  const maxPrice = markets.length
+    ? Math.max(...markets.map((market) => market.max))
+    : 0;
+
+  const avgPrice = markets.length
+    ? markets.reduce((sum, market) => sum + (market.min + market.max) / 2, 0) /
+      markets.length
+    : 0;
 
   const isUp = product.change?.dir === "up";
   const isDown = product.change?.dir === "down";
@@ -40,7 +87,9 @@ const ProductDetails = async ({ params }) => {
             হোম
           </Link>
           <span>›</span>
-          <span>{product.categoryNameBn || product.category}</span>
+          <Link href={`/category/${product.category}`}>
+            <span>{product.categoryNameBn || product.category}</span>
+          </Link>
           <span>›</span>
           <span className="text-[#202a23]">{product.nameBn}</span>
         </nav>
@@ -164,25 +213,32 @@ const ProductDetails = async ({ params }) => {
                         <td className="px-4 py-4 font-medium text-[#202a23]">
                           {market.market}
                         </td>
-
                         <td className="px-4 py-4 text-[#68736b]">
                           {market.division}
                         </td>
-
                         <td className="px-4 py-4 text-right text-green-600">
                           {formatPrice(market.min)} টাকা
                         </td>
-
                         <td className="px-4 py-4 text-right text-red-600">
                           {formatPrice(market.max)} টাকা
                         </td>
-
                         <td className="px-4 py-4 text-right font-bold text-[#202a23]">
                           {formatPrice(marketAverage)} টাকা
                         </td>
                       </tr>
                     );
                   })}
+
+                  {markets.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan={5}
+                        className="px-4 py-8 text-center text-[#68736b]"
+                      >
+                        এই পণ্যের বাজারভিত্তিক দাম পাওয়া যায়নি।
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

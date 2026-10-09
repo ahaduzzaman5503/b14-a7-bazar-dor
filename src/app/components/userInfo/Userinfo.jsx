@@ -34,13 +34,19 @@ const Userinfo = () => {
             className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1 hover:bg-gray-100"
           >
             <div className="h-9 w-9 overflow-hidden rounded-full">
-              <Image
-                src={user?.image}
-                alt="Profile"
-                height={30}
-                width={30}
-                className="h-full w-full object-cover"
-              />
+              {user?.image ? (
+                <Image
+                  src={user.image}
+                  alt="User"
+                  width={40}
+                  height={40}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-600">
+                  {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                </div>
+              )}
             </div>
 
             <span className="text-sm font-medium text-gray-800">

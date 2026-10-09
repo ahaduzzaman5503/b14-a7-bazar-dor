@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const Nablinks = () => {
+const Categorylinks = () => {
   const pathname = usePathname();
   const [categories, setCategories] = useState([]);
 
@@ -21,7 +21,7 @@ const Nablinks = () => {
 
         const data = await res.json();
 
-        setCategories(data);
+        setCategories(Array.isArray(data) ? data : data.data || []);
       } catch (error) {
         console.error("Category fetch error:", error);
       }
@@ -31,36 +31,42 @@ const Nablinks = () => {
   }, []);
 
   return (
-    <div className="flex gap-2 justify-center py-2 font-semibold">
-      {categories.map((category) => {
-        const href = `/${category.id}`;
+    <nav className="flex gap-2 overflow-x-auto px-3 py-2">
+      <Link
+        href="/"
+        className={`shrink-0 rounded-full px-3 py-2 text-xs font-medium transition ${
+          pathname === "/"
+            ? "bg-[#079447] text-white"
+            : "text-[#303a32] hover:bg-[#edf4ee]"
+        }`}
+      >
+        🏠 হোম
+      </Link>
 
+      {categories.map((category) => {
+        const href = `/category/${category.id}`;
         const isActive = pathname === href;
 
         return (
           <Link
             key={category.id}
             href={href}
-            className={`
-              flex items-center gap-1
-              px-4 py-2
-              rounded-md
-              transition-colors
-              ${
-                isActive
-                  ? "bg-green-500 text-white"
-                  : "text-gray-700 hover:bg-green-100 hover:text-green-700"
-              }
-            `}
+            className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium transition ${
+              isActive
+                ? "bg-[#079447] text-white"
+                : "text-[#303a32] hover:bg-[#edf4ee]"
+            }`}
           >
-            <span>{category.icon}</span>
+            <span>{category.icon || category.categoryIcon || "🥬"}</span>
 
-            <span>{category.nameBn}</span>
+            <span>
+              {category.nameBn || category.categoryNameBn || category.name}
+            </span>
           </Link>
         );
       })}
-    </div>
+    </nav>
   );
 };
 
-export default Nablinks;
+export default Categorylinks;

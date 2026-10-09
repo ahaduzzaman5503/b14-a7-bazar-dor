@@ -1,10 +1,10 @@
 import Image from "next/image";
-import React from "react";
+import React, { Suspense } from "react";
 import logo from "../../../assets/logo-icon.png";
-import Categorylinks from "./Categorylinks";
 import Link from "next/link";
 import BanglaDate from "../date/BanglaDate";
 import PriceTicker from "./PriceTicker";
+import Categorylinks from "./Categorylinks.jsx";
 import Userinfo from "../userInfo/Userinfo";
 
 const Navber = () => {
@@ -32,7 +32,10 @@ const Navber = () => {
           <Userinfo />
         </div>
       </div>
-      <Categorylinks />
+
+      <Suspense fallback={<div className="h-8" />}>
+  <Categorylinks />
+</Suspense>
       <PriceTicker />
     </div>
   );

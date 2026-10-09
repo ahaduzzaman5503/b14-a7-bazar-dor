@@ -21,7 +21,7 @@ const HeroBanner = () => {
               বিস্তারিত, গড়, সর্বনিম্ন-সর্বোচ্চ এবং দামের পরিবর্তন এক জায়গায়।
             </p>
 
-            <Link href="#সব-পণ্য">
+            <Link href="#">
               <button className="btn mt-6 min-h-10 border-none bg-[#078b43] px-6 text-sm font-semibold text-white shadow-md transition hover:bg-[#067536]">
                 সব পণ্য দেখুন
               </button>
