@@ -1,14 +1,14 @@
 
 
-const IncreasingPrices = async () => {
+const DecreasingPrices = async () => {
   const res = await fetch("https://api.abcz.workers.dev/api/bazardor/products");
   const data = await res.json();
 
   const productList = Array.isArray(data) ? data : data.data;
 
   const products = productList
-    .filter((product) => product.change?.dir === "up" && product.change.pct > 0)
-    .sort((a, b) => b.change.pct - a.change.pct)
+    .filter((product) => product.change?.dir === "down" && product.change.pct < 0)
+    .sort((a, b) => a.change.pct - b.change.pct)
     .slice(0, 6);
 
   const formatPrice = (price) => new Intl.NumberFormat("bn-BD").format(price);
@@ -16,9 +16,9 @@ const IncreasingPrices = async () => {
   return (
     <section className="mb-10">
       <div className="mb-5 flex items-center gap-2">
-        <span className="text-red-500">▲</span>
+        <span className="text-green-500">▼</span>
         <h2 className="text-xl font-bold text-[#202a23] md:text-2xl">
-          আজ দাম বেড়েছে
+          আজ দাম কমেছে
         </h2>
       </div>
 
@@ -56,8 +56,8 @@ const IncreasingPrices = async () => {
                 </p>
               </div>
 
-              <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600">
-                ▲ {formatPrice(product.change.pct)}%
+              <span className="rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-600">
+                ▼ {formatPrice(Math.abs(product.change.pct))}%
               </span>
             </div>
           </article>
@@ -67,4 +67,4 @@ const IncreasingPrices = async () => {
   );
 };
 
-export default IncreasingPrices;
+export default DecreasingPrices;
