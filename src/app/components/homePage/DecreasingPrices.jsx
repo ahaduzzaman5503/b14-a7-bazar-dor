@@ -14,7 +14,7 @@ const DecreasingPrices = async () => {
   const formatPrice = (price) => new Intl.NumberFormat("bn-BD").format(price);
 
   return (
-    <section className="mb-10">
+    <section className="mb-10 bg-[#f0f5f0]">
       <div className="mb-5 flex items-center gap-2">
         <span className="text-green-500">▼</span>
         <h2 className="text-xl font-bold text-[#202a23] md:text-2xl">
@@ -26,7 +26,7 @@ const DecreasingPrices = async () => {
         {products.map((product) => (
           <article
             key={product.id}
-            className="rounded-2xl border border-[#dce7de] bg-[#fbfdfb] p-4 transition hover:-translate-y-1 hover:shadow-md"
+            className="rounded-2xl border border-[#dce7de] bg-white p-4 transition hover:-translate-y-1 hover:shadow-md"
           >
             <div className="flex items-center gap-3">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#f0f5f0] text-2xl">

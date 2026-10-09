@@ -1,29 +1,26 @@
 
 
-const IncreasingPrices = async () => {
+
+const AllProducts = async () => {
   const res = await fetch("https://api.abcz.workers.dev/api/bazardor/products");
   const data = await res.json();
 
   const productList = Array.isArray(data) ? data : data.data;
-
-  const products = productList
-    .filter((product) => product.change?.dir === "up" && product.change.pct > 0)
-    .sort((a, b) => b.change.pct - a.change.pct)
-    .slice(0, 6);
-
   const formatPrice = (price) => new Intl.NumberFormat("bn-BD").format(price);
 
   return (
     <section className="mb-10 bg-[#f0f5f0]">
-      <div className="mb-5 flex items-center gap-2">
-        <span className="text-red-500">▲</span>
+      <div className="mb-5">
         <h2 className="text-xl font-bold text-[#202a23] md:text-2xl">
-          আজ দাম বেড়েছে
+          সব পণ্য
         </h2>
+        <p className="mt-2 text-sm text-[#68736b]">
+          মোট {formatPrice(productList.length)}টি পণ্যের দাম দেখানো হচ্ছে
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {products.map((product) => (
+        {productList.map((product) => (
           <article
             key={product.id}
             className="rounded-2xl border border-[#dce7de] bg-white p-4 transition hover:-translate-y-1 hover:shadow-md"
@@ -56,9 +53,25 @@ const IncreasingPrices = async () => {
                 </p>
               </div>
 
-              <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600">
-                ▲ {formatPrice(product.change.pct)}%
-              </span>
+              {product.change?.dir === "up" && (
+                <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600">
+                  ▲ {formatPrice(Math.abs(product.change.pct))}%
+                </span>
+              )}
+
+              {product.change?.dir === "down" && (
+                <span className="rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-600">
+                  ▼ {formatPrice(Math.abs(product.change.pct))}%
+                </span>
+              )}
+
+              {(!product.change ||
+                product.change.dir === "flat" ||
+                product.change.pct === 0) && (
+                <span className="rounded-full bg-[#f0f5f0] px-2.5 py-1 text-xs font-semibold text-[#68736b]">
+                  — ০.০%
+                </span>
+              )}
             </div>
           </article>
         ))}
@@ -67,4 +80,4 @@ const IncreasingPrices = async () => {
   );
 };
 
-export default IncreasingPrices;
+export default AllProducts;
