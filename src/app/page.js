@@ -7,13 +7,11 @@ export default function Home() {
   return (
     <div className="bg-[#f0f5f0]">
       <div className="container mx-auto">
-      <HeroBanner></HeroBanner>
-      <IncreasingPrices></IncreasingPrices>
-      <DecreasingPrices></DecreasingPrices>
-      <AllProducts></AllProducts>
-      <h1>This is Home page</h1>
+        <HeroBanner></HeroBanner>
+        <IncreasingPrices></IncreasingPrices>
+        <DecreasingPrices></DecreasingPrices>
+        <AllProducts></AllProducts>
       </div>
-
     </div>
   );
 }

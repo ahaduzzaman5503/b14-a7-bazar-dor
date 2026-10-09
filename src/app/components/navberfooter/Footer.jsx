@@ -1,6 +1,3 @@
-
-
-
 const Footer = () => {
   return (
     <footer className="container mx-auto border-t border-[#dce7de] bg-[#fbfdfb] px-4 py-5 md:px-8">

@@ -1,4 +1,4 @@
-
+import Link from "next/link";
 
 const DecreasingPrices = async () => {
   const res = await fetch("https://api.abcz.workers.dev/api/bazardor/products");
@@ -7,7 +7,9 @@ const DecreasingPrices = async () => {
   const productList = Array.isArray(data) ? data : data.data;
 
   const products = productList
-    .filter((product) => product.change?.dir === "down" && product.change.pct < 0)
+    .filter(
+      (product) => product.change?.dir === "down" && product.change.pct < 0,
+    )
     .sort((a, b) => a.change.pct - b.change.pct)
     .slice(0, 6);
 
@@ -24,7 +26,8 @@ const DecreasingPrices = async () => {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {products.map((product) => (
-          <article
+          <Link
+            href={`/product/${product.id}`}
             key={product.id}
             className="rounded-2xl border border-[#dce7de] bg-white p-4 transition hover:-translate-y-1 hover:shadow-md"
           >
@@ -60,7 +63,7 @@ const DecreasingPrices = async () => {
                 ▼ {formatPrice(Math.abs(product.change.pct))}%
               </span>
             </div>
-          </article>
+          </Link>
         ))}
       </div>
     </section>
