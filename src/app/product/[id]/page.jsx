@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { auth } from "../../../lib/auth";
@@ -12,15 +13,16 @@ const getUnit = (unit) => {
   const units = {
     kg: "কেজি",
     litre: "লিটার",
+    liter: "লিটার",
     dozen: "ডজন",
     piece: "পিস",
   };
 
-  return units[unit] || unit || "";
+  return units[unit?.toLowerCase()] || unit || "";
 };
 
-const ProductDetails = async ({ params }) => {
-  const { id } = await params;
+async function ProductContent({ params }) {
+    const { id } = await params;
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -44,7 +46,6 @@ const ProductDetails = async ({ params }) => {
   }
 
   const product = await res.json();
-  console.log(product);
 
   if (!product || typeof product !== "object") {
     throw new Error("Invalid product data");
@@ -81,19 +82,24 @@ const ProductDetails = async ({ params }) => {
 
   return (
     <main className="min-h-screen bg-[#f0f5f0] px-4 py-6 md:px-8">
+      {" "}
       <div className="mx-auto max-w-7xl">
+        {" "}
         <nav className="mb-7 flex flex-wrap items-center gap-2 text-sm text-[#68736b]">
+          {" "}
           <Link href="/" className="hover:text-[#202a23]">
-            হোম
-          </Link>
+            হোম{" "}
+          </Link>{" "}
           <span>›</span>
-          <Link href={`/category/${product.category}`}>
-            <span>{product.categoryNameBn || product.category}</span>
-          </Link>
-          <span>›</span>
-          <span className="text-[#202a23]">{product.nameBn}</span>
+          <Link
+            href={`/category/${product.category}`}
+            className="hover:text-[#202a23]"
+          >
+            {product.categoryNameBn || product.category}{" "}
+          </Link>{" "}
+          <span>›</span>{" "}
+          <span className="text-[#202a23]">{product.nameBn}</span>{" "}
         </nav>
-
         <section className="mb-5 flex flex-col justify-between gap-5 rounded-2xl border border-[#dce7de] bg-[#fbfdfb] p-5 sm:flex-row sm:items-center md:p-6">
           <div className="flex items-center gap-4">
             <div className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-2xl bg-[#f0f5f0] text-4xl">
@@ -142,7 +148,6 @@ const ProductDetails = async ({ params }) => {
             </p>
           </div>
         </section>
-
         <section className="rounded-2xl border border-[#dce7de] bg-[#fbfdfb] p-5 md:p-6">
           <h2 className="mb-4 text-lg font-bold text-[#202a23]">
             দামের সারসংক্ষেপ
@@ -247,6 +252,20 @@ const ProductDetails = async ({ params }) => {
       </div>
     </main>
   );
-};
+}
 
-export default ProductDetails;
+export default function ProductDetails({ params }) {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-[#f0f5f0] px-4 py-6">
+          <div className="mx-auto max-w-7xl rounded-2xl bg-white p-6">
+            পণ্যের তথ্য লোড হচ্ছে...
+          </div>
+        </main>
+      }
+    >
+      <ProductContent params={params} />
+    </Suspense>
+  );
+}

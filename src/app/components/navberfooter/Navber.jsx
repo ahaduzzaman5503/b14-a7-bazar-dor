@@ -34,8 +34,8 @@ const Navber = () => {
       </div>
 
       <Suspense fallback={<div className="h-8" />}>
-  <Categorylinks />
-</Suspense>
+        <Categorylinks />
+      </Suspense>
       <PriceTicker />
     </div>
   );
