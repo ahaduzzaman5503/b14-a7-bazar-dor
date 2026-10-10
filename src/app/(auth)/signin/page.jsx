@@ -2,56 +2,95 @@
 
 import { authClient } from "../../../lib/auth-client";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 
 const SigninPage = () => {
+  const router = useRouter();
+
   const handleSignIn = async (e) => {
     e.preventDefault();
+
     const formData = new FormData(e.currentTarget);
+
     const data = {};
     formData.forEach((value, key) => {
       data[key] = value.toString();
     });
 
-    const { data: signInData, error } = await authClient.signIn.email({
-      email: data.email,
-      password: data.password,
-    });
-    if (error) {
-      console.error("Signup error:", error);
-      toast.error("রেজিস্ট্রেশন ব্যর্থ হয়েছে");
-      return;
-    }
+    const loadingToast = toast.loading("সাইন ইন হচ্ছে...");
 
-    if (signInData) {
-      toast("Login Successful");
-      setTimeout(() => {
-        redirect("/");
-      }, 2000);
+    try {
+      const { data: signInData, error } =
+        await authClient.signIn.email({
+          email: data.email,
+          password: data.password,
+        });
+
+      if (error) {
+        toast.error(
+          error.message || "সাইন ইন ব্যর্থ হয়েছে",
+          { id: loadingToast }
+        );
+        return;
+      }
+
+      if (signInData) {
+        toast.success("সফলভাবে সাইন ইন হয়েছে!", {
+          id: loadingToast,
+          duration: 2000,
+        });
+
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
+      }
+    } catch (error) {
+      toast.error("কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।", {
+        id: loadingToast,
+      });
     }
   };
 
   const handleGooglesignIn = async () => {
-    const data = await authClient.signIn.social({
-      provider: "google",
-    });
+    try {
+      const { error } = await authClient.signIn.social({
+        provider: "google",
+      });
+
+      if (error) {
+        toast.error(error.message || "Google দিয়ে সাইন ইন ব্যর্থ হয়েছে");
+      }
+    } catch (error) {
+      toast.error("Google দিয়ে সাইন ইন করতে সমস্যা হয়েছে");
+    }
   };
 
   const handleGithubsignIn = async () => {
-    const data = await authClient.signIn.social({
-      provider: "github",
-    });
+    try {
+      const { error } = await authClient.signIn.social({
+        provider: "github",
+      });
+
+      if (error) {
+        toast.error(error.message || "GitHub দিয়ে সাইন ইন ব্যর্থ হয়েছে");
+      }
+    } catch (error) {
+      toast.error("GitHub দিয়ে সাইন ইন করতে সমস্যা হয়েছে");
+    }
   };
+
   return (
     <main className="min-h-screen bg-[#f3f8f4] px-4 py-7">
       <div className="mx-auto w-full max-w-[365px]">
         <div className="mb-6 text-center">
-          <h1 className="text-[23px] font-bold text-[#202a23]">সাইন ইন</h1>
+          <h1 className="text-[23px] font-bold text-[#202a23]">
+            সাইন ইন
+          </h1>
 
           <p className="mt-1 text-[12px] text-gray-500">
-            স্বাগতম আবার, আপনার পুরোনো ও প্রোফাইল দেখুন অ্যাকাউন্টে ঢুকুন।
+            স্বাগতম আবার, আপনার অ্যাকাউন্টে ঢুকুন এবং প্রোফাইল দেখুন।
           </p>
         </div>
 
@@ -69,11 +108,9 @@ const SigninPage = () => {
                 id="email"
                 name="email"
                 type="email"
+                required
                 placeholder="you@example.com"
-                className="h-[36px] w-full rounded-lg border border-[#dce4df]
-                bg-white px-3 text-[12px] text-gray-700 outline-none
-                placeholder:text-gray-500
-                focus:border-[#079447] focus:ring-1 focus:ring-[#079447]"
+                className="h-[36px] w-full rounded-lg border border-[#dce4df] bg-white px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-500 focus:border-[#079447] focus:ring-1 focus:ring-[#079447]"
               />
             </div>
 
@@ -89,21 +126,15 @@ const SigninPage = () => {
                 id="password"
                 name="password"
                 type="password"
-                placeholder="কমপক্ষে ৬ অক্ষর"
-                className="h-[36px] w-full rounded-lg border border-[#dce4df]
-                bg-white px-3 text-[12px] text-gray-700 outline-none
-                placeholder:text-gray-500
-                focus:border-[#079447] focus:ring-1 focus:ring-[#079447]"
+                required
+                placeholder="আপনার পাসওয়ার্ড দিন"
+                className="h-[36px] w-full rounded-lg border border-[#dce4df] bg-white px-3 text-[12px] text-gray-700 outline-none placeholder:text-gray-500 focus:border-[#079447] focus:ring-1 focus:ring-[#079447]"
               />
             </div>
 
             <button
               type="submit"
-              className="h-[37px] w-full rounded-lg
-              bg-[#079447] text-[12px] font-medium text-white
-              shadow-[0_2px_3px_rgba(0,0,0,0.2)]
-              transition hover:bg-[#07833e]
-              active:translate-y-[1px]"
+              className="h-[37px] w-full rounded-lg bg-[#079447] text-[12px] font-medium text-white shadow-[0_2px_3px_rgba(0,0,0,0.2)] transition hover:bg-[#07833e] active:translate-y-[1px]"
             >
               সাইন ইন
             </button>
@@ -111,9 +142,7 @@ const SigninPage = () => {
 
           <div className="my-4 flex items-center gap-3">
             <div className="h-px flex-1 bg-[#dfe5e1]" />
-
             <span className="text-[11px] text-gray-500">অথবা</span>
-
             <div className="h-px flex-1 bg-[#dfe5e1]" />
           </div>
 
@@ -151,14 +180,35 @@ const SigninPage = () => {
         <div className="mt-5 text-center">
           <Link
             href="/"
-            className="text-[11px] text-gray-400 transition
-            hover:text-gray-600"
+            className="text-[11px] text-gray-400 transition hover:text-gray-600"
           >
             ← হোম পেজে ফিরে যান
           </Link>
         </div>
       </div>
-      <Toaster />
+
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 1000,
+          style: {
+            fontSize: "14px",
+          },
+          success: {
+            style: {
+              background: "#e8f8ee",
+              color: "#079447",
+            },
+          },
+          error: {
+            style: {
+              background: "#fff0f0",
+              color: "#dc2626",
+            },
+          },
+        }}
+      />
     </main>
   );
 };
