@@ -4,7 +4,7 @@ import { authClient } from "../../lib/auth-client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast, ToastContainer } from "react-toastify";
+import { Toaster } from "react-hot-toast";
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -20,7 +20,7 @@ const ProfilePage = () => {
     const { data, error } = await authClient.updateUser({
       name,
     });
-    toast.success("Name Updated Succesful");
+    toast("Name Updated Succesful");
   };
 
   const handleSignOut = async () => {
@@ -102,7 +102,7 @@ const ProfilePage = () => {
           </form>
         </div>
       </div>
-      <ToastContainer />
+      <Toaster />
     </main>
   );
 };

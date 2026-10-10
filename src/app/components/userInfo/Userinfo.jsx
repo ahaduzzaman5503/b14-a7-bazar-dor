@@ -4,8 +4,8 @@ import Image from "next/image";
 import { authClient } from "../../../lib/auth-client";
 import Link from "next/link";
 import React from "react";
-import { toast, ToastContainer } from "react-toastify";
 import { redirect } from "next/navigation";
+import { Toaster } from "react-hot-toast";
 
 const Userinfo = () => {
   const { data: sesson } = authClient.useSession();
@@ -19,7 +19,7 @@ const Userinfo = () => {
       toast.error("Sign out failed");
       return;
     }
-    toast.success("Successfully signed out");
+    toast("Successfully signed out");
     setTimeout(() => {
       redirect("/signin");
     }, 1000);
@@ -101,7 +101,7 @@ const Userinfo = () => {
           </Link>
         </>
       )}
-      <ToastContainer />
+      <Toaster />
     </div>
   );
 };

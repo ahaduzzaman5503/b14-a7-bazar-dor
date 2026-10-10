@@ -3,8 +3,8 @@
 import { authClient } from "../../../lib/auth-client";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Toaster } from "react-hot-toast";
 import { FaGithub, FaGoogle } from "react-icons/fa";
-import { toast, ToastContainer } from "react-toastify";
 
 const SignupPage = () => {
   const handleSubmit = async (e) => {
@@ -30,7 +30,7 @@ const SignupPage = () => {
     }
 
     if (signUpData) {
-      toast.success("Registration Successful");
+      toast("Registration Successful");
 
       setTimeout(() => {
         redirect("/signin");
@@ -192,7 +192,7 @@ const SignupPage = () => {
           </Link>
         </div>
       </div>
-      <ToastContainer />
+      <Toaster />
     </main>
   );
 };

@@ -8,7 +8,7 @@ const AllProducts = async () => {
   const formatPrice = (price) => new Intl.NumberFormat("bn-BD").format(price);
 
   return (
-    <section className="mb-10 bg-[#f0f5f0]">
+    <section className="mb-10 bg-[#f0f5f0] scroll-mt-24 py-10" id="সব-পণ্য">
       <div className="mb-5">
         <h2 className="text-xl font-bold text-[#202a23] md:text-2xl">
           সব পণ্য

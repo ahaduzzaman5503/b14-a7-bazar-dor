@@ -22,7 +22,7 @@ const getUnit = (unit) => {
 };
 
 async function ProductContent({ params }) {
-    const { id } = await params;
+  const { id } = await params;
   const session = await auth.api.getSession({
     headers: await headers(),
   });

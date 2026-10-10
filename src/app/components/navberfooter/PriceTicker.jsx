@@ -35,7 +35,7 @@ const PriceTicker = () => {
     <div className="w-full overflow-hidden border-y border-gray-200 bg-white">
       <Marquee
         direction="left"
-        speed={70}
+        speed={150}
         autoFill={true}
         pauseOnHover={true}
         gradient={false}

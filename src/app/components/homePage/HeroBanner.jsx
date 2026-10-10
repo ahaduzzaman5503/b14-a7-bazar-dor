@@ -1,6 +1,5 @@
 import Image from "next/image";
 import herobannar from "../../../assets/bazar-hero.png";
-import Link from "next/link";
 import BanglaDate from "../date/BanglaDate";
 const HeroBanner = () => {
   return (
@@ -21,11 +20,11 @@ const HeroBanner = () => {
               বিস্তারিত, গড়, সর্বনিম্ন-সর্বোচ্চ এবং দামের পরিবর্তন এক জায়গায়।
             </p>
 
-            <Link href="#">
+            <a href="#সব-পণ্য">
               <button className="btn mt-6 min-h-10 border-none bg-[#078b43] px-6 text-sm font-semibold text-white shadow-md transition hover:bg-[#067536]">
                 সব পণ্য দেখুন
               </button>
-            </Link>
+            </a>
           </div>
 
           <div className="flex w-full shrink-0 items-center justify-center md:w-[350px]">
